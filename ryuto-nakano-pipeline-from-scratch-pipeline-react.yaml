@@ -13,7 +13,7 @@ spec:
     - name: image-repo
       type: string
       description: Docker image name
-      default: quay.io/<Account-name>/express-sample-app
+      default: quay.io/ryuto-nakano/ryuto-nakano-react-app
   tasks:
     - name: clone-repository
       params:
@@ -32,8 +32,9 @@ spec:
         - name: ARGS
           value:
             - clean-install
+        # バージョンを指定
         - name: IMAGE
-          value: "docker.io/library/node:20-alpine"
+          value: "docker.io/library/node:20.15.1"
       workspaces:
         - name: source
           workspace: pipeline-shared-data
@@ -46,10 +47,23 @@ spec:
         - name: ARGS
           value:
             - test
+        # バージョンを指定
         - name: IMAGE
-          value: "docker.io/library/node:20-alpine"
+          value: "docker.io/library/node:20.15.1"
       workspaces:
         - name: source
           workspace: pipeline-shared-data
       runAfter:
         - install-dependencies
+    - name: build-image
+      runAfter:
+        - run-tests
+      params:
+        - name: IMAGE
+          value: "$(params.image-repo):$(tasks.clone-repository.results.commit)"
+      taskRef:
+        kind: Task
+        name: buildah
+      workspaces:
+        - name: source
+          workspace: pipeline-shared-data

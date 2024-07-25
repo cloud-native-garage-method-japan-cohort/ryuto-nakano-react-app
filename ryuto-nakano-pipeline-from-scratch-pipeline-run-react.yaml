@@ -5,6 +5,15 @@ metadata:
 spec:
   pipelineRef:
     name: ryuto-nakano-pipeline-from-scratch-pipeline-react
+  taskRunTemplate:
+    serviceAccountName: build-bot
+  taskRunSpecs:
+    - pipelineTaskName: clone-repository
+      podTemplate:
+        securityContext:
+          runAsUser: 65532
+          runAsGroup: 65532
+          fsGroup: 65532
   workspaces:
     - name: pipeline-shared-data
       persistentVolumeClaim:
