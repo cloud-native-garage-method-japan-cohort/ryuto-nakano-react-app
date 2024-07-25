@@ -32,8 +32,24 @@ spec:
         - name: ARGS
           value:
             - clean-install
+        - name: IMAGE
+          value: "docker.io/library/node:20-alpine"
       workspaces:
         - name: source
           workspace: pipeline-shared-data
       runAfter:
         - clone-repository
+    - name: run-tests
+      taskRef:
+        name: npm
+      params:
+        - name: ARGS
+          value:
+            - test
+        - name: IMAGE
+          value: "docker.io/library/node:20-alpine"
+      workspaces:
+        - name: source
+          workspace: pipeline-shared-data
+      runAfter:
+        - install-dependencies
