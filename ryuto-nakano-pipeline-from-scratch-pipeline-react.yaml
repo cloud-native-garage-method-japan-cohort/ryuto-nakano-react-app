@@ -3,7 +3,7 @@ kind: Pipeline
 metadata:
   annotations:
     app.openshift.io/runtime: nodejs
-  name: ryuto-nakano-pipeline-from-scratch-pipeline
+  name: ryuto-nakano-pipeline-from-scratch-pipeline-react
 spec:
   workspaces:
     - name: pipeline-shared-data
@@ -18,10 +18,22 @@ spec:
     - name: clone-repository
       params:
         - name: url
-          value: https://github.com/upslopeio/express-sample-app
+          value: https://github.com/cloud-native-garage-method-japan-cohort/ryuto-nakano-react-app.git
       taskRef:
         kind: Task
         name: git-clone
       workspaces:
         - name: output
           workspace: pipeline-shared-data
+    - name: install-dependencies
+      taskRef:
+        name: npm
+      params:
+        - name: ARGS
+          value:
+            - clean-install
+      workspaces:
+        - name: source
+          workspace: pipeline-shared-data
+      runAfter:
+        - clone-repository

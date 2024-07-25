@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  generateName: ryuto-nakano-pipeline-from-scratch-pipeline-run-react-
+spec:
+  pipelineRef:
+    name: ryuto-nakano-pipeline-from-scratch-pipeline-react
+  workspaces:
+    - name: pipeline-shared-data
+      persistentVolumeClaim:
+        claimName: ryuto-nakano-pvc
